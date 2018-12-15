@@ -1,0 +1,50 @@
+* Demo of using ClojureScript + tools-deps + CIDER
+
+These are just notes following a helpful video by Arne Brasseur: [[https://www.youtube.com/watch?v=hcFx-QL5ySM&feature=youtu.be]]
+
+I've been trying to get into ClojureScript but almost gave up when I couldn't figure out how to work with tools-deps /and/ CIDER (which is my usual setup for Clojure projects). Very grateful he posted the video, check it out!
+
+** Sanity checks
+Try it outside of Emacs first. Install Clojure CLI tools from [[clojure.org]].
+
+I used Emacs 26.1 with CIDER 0.18.0, Java 8 and Clojure 1.9.0.
+
+*** Plain figwheel-main + deps.edn
+
+#+BEGIN_SRC shell
+    clojure -A:dev -m figwheel.main --compile cljs-deps-figwheel-main-cider.core --repl
+#+END_SRC
+
+This should launch:
+- address [[http://localhost:9500]] in your default browser with the Figwheel page open and any code in =core.cljs= executed
+- a browser-connected REPL where you can evaluate things like =(js/alert "does it work?")=
+
+*Warning*: =js/alert= will block the REPL until you click "ok" in the browser!
+
+*** Using a build file
+
+#+BEGIN_SRC shell
+    clojure -A:dev -m figwheel.main --build mybuild --repl
+#+END_SRC
+
+This should do the same as the above. =mybuild= corresponds to [[./mybuild.cljs.edn]].
+
+** Once more with +feeling+ Emacs
+
+*** Passing arguments manually
+
+/N.B. /If you've cloned this repo directly, you are effectively skipping this step (which is fine)./
+
+- Customize CIDER to add ="-A:dev"= to your CLI tool options (=M-x customize-variable cider-clojure-cli-global-options=). This is because I've put the figwheel stuff in an alias.
+- =M-x cider-jack-in-cljs= and when prompted select =figwheel-main= first then =mybuild= as your build.
+- nREPL should fire up and do the same things as the raw command above.
+
+*** Using .dir-locals.el to save arguments for project
+
+Create [[./.dir-locals.el]] to store the arguments from the previous step. Remember the catch is that you need to close and reopen any buffers visiting files in the project directory because dir-locals is only read when buffers are first opened.
+
+** Further reading
+
+- [[https://figwheel.org/tutorial]]
+_ https://lambdaisland.com/
+- [[https://clojurescript.org]]
